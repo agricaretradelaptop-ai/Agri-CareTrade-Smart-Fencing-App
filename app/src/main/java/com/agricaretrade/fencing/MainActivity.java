@@ -119,8 +119,15 @@ private void notifyNewUser(String name, String email) {
             connection.getResponseCode();
             connection.disconnect();
 
-        } catch (Exception ignored) {
-        }
+} catch (Exception e) {
+    runOnUiThread(() ->
+        Toast.makeText(
+            MainActivity.this,
+            "Notification error: " + e.getMessage(),
+            Toast.LENGTH_LONG
+        ).show()
+    );
+}
     }).start();
 }
   @JavascriptInterface public void loginUser(String email,String password){runOnUiThread(()->{
