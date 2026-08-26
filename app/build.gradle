@@ -14,7 +14,7 @@ android {
     versionCode 8
     versionName '5.3.0'
 
-    buildConfigField 'String', 'USER_NOTIFICATION_URL', '"' + (System.getenv('USER_NOTIFICATION_URL') ?: '') + '"'
+    buildConfigField 'String', 'USER_NOTIFICATION_URL', '"https://script.google.com/macros/s/AKfycbyMQSkfNWEO7sI96-0dCgZ4yED-Ps9n7eLSB4Jh0URu0_X6Rjf9Vv3Rf8feaVdEXhEG/exec"'
 }
 
 buildFeatures {
