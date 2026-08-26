@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "540646227692",
+    "project_id": "agri-caretrade-fencing",
+    "storage_bucket": "agri-caretrade-fencing.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540646227692:android:2dd59539860c9c02b56fc9",
+        "android_client_info": {
+          "package_name": "com.agricaretrade.fencing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz2QeeCZc0Fb_YtauEHxGuE465-gtH1hw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
