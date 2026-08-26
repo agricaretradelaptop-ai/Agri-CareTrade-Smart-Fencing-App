@@ -19,6 +19,7 @@ import com.google.firebase.firestore.*;
 
 import org.json.*;
 import java.io.*;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -74,10 +75,54 @@ public class MainActivity extends Activity {
     if(!t.isSuccessful()){js("window.onAuthError&&window.onAuthError("+jsQuote(message((Exception)t.getException()))+");");return;}
     FirebaseUser u=auth.getCurrentUser(); if(u==null)return;
     Map<String,Object> data=new HashMap<>();data.put("name",n);data.put("email",em);data.put("role","user");data.put("status","pending");
-    db.collection("users").document(u.getUid()).set(data).addOnSuccessListener(v->{auth.signOut();js("window.onRegistrationComplete&&window.onRegistrationComplete();");}).addOnFailureListener(e->{auth.signOut();js("window.onAuthError&&window.onAuthError("+jsQuote(message(e))+ ");");});
+    db.collection("users").document(u.getUid()).set(data)
+    .addOnSuccessListener(v -> {
+        notifyNewUser(n, em);
+        auth.signOut();
+        js("window.onRegistrationComplete&&window.onRegistrationComplete();");
+    })
+    .addOnFailureListener(e -> {
+        auth.signOut();
+    });
    });
   });}
+private void notifyNewUser(String name, String email) {
+    new Thread(() -> {
+        try {
+            String endpoint = BuildConfig.USER_NOTIFICATION_URL;
 
+            if (endpoint == null || endpoint.trim().isEmpty()) {
+                return;
+            }
+
+            URL url = new URL(endpoint);
+            HttpURLConnection connection =
+                    (HttpURLConnection) url.openConnection();
+
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+            connection.setDoOutput(true);
+            connection.setRequestProperty(
+                    "Content-Type",
+                    "application/json; charset=UTF-8"
+            );
+
+            JSONObject payload = new JSONObject();
+            payload.put("name", name);
+            payload.put("email", email);
+
+            try (OutputStream output = connection.getOutputStream()) {
+                output.write(payload.toString().getBytes(StandardCharsets.UTF_8));
+            }
+
+            connection.getResponseCode();
+            connection.disconnect();
+
+        } catch (Exception ignored) {
+        }
+    }).start();
+}
   @JavascriptInterface public void loginUser(String email,String password){runOnUiThread(()->{
    String em=email==null?"":email.trim(); if(em.isEmpty()||password==null||password.isEmpty()){js("window.onAuthError&&window.onAuthError("+jsQuote("Enter your email address and password.")+");");return;}
    auth.signInWithEmailAndPassword(em,password).addOnCompleteListener(t->{if(!t.isSuccessful()){js("window.onAuthError&&window.onAuthError("+jsQuote(message((Exception)t.getException()))+");");return;}FirebaseUser u=auth.getCurrentUser();if(u!=null)loadProfile(u);});
