@@ -1,0 +1,50 @@
+workflows:
+  android-test-build:
+    name: Agri Smart Fencing V5.2 Test
+    max_build_duration: 30
+    environment:
+      java: 21
+    scripts:
+      - name: Create Gradle 9.5 wrapper
+        script: |
+          rm -rf /tmp/agri-gradle-wrapper
+          mkdir -p /tmp/agri-gradle-wrapper
+          cd /tmp/agri-gradle-wrapper
+          touch settings.gradle
+          gradle wrapper --gradle-version 9.5.0
+          cp -R gradle "$CM_BUILD_DIR/"
+          cp gradlew "$CM_BUILD_DIR/"
+          cp gradlew.bat "$CM_BUILD_DIR/"
+          cd "$CM_BUILD_DIR"
+          chmod +x gradlew
+          ./gradlew --version
+      - name: Build debug APK
+        script: |
+          ./gradlew assembleDebug
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+
+  android-playstore-aab:
+    name: Agri Smart Fencing V5.2 Play Store AAB
+    max_build_duration: 30
+    environment:
+      java: 21
+    scripts:
+      - name: Create Gradle 9.5 wrapper
+        script: |
+          rm -rf /tmp/agri-gradle-wrapper
+          mkdir -p /tmp/agri-gradle-wrapper
+          cd /tmp/agri-gradle-wrapper
+          touch settings.gradle
+          gradle wrapper --gradle-version 9.5.0
+          cp -R gradle "$CM_BUILD_DIR/"
+          cp gradlew "$CM_BUILD_DIR/"
+          cp gradlew.bat "$CM_BUILD_DIR/"
+          cd "$CM_BUILD_DIR"
+          chmod +x gradlew
+          ./gradlew --version
+      - name: Build release AAB
+        script: |
+          ./gradlew bundleRelease
+    artifacts:
+      - app/build/outputs/bundle/release/*.aab

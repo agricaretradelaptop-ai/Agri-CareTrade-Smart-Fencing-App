@@ -1,0 +1,1 @@
+-keepclassmembers class com.agricaretrade.fencing.MainActivity$AndroidBridge { @android.webkit.JavascriptInterface <methods>; }
